@@ -48,12 +48,20 @@ def _local_date(dt: datetime | None) -> datetime:
     return dt.astimezone(TZ)  # o JS envia em UTC (Z); converte para o horário local
 
 
-def printer_available() -> bool:
+def printer_status() -> str:
     try:
         with open(DEVICE, "wb"):
-            return True
+            return "ok"
+    except FileNotFoundError:
+        return "missing"
+    except PermissionError:
+        return "denied"
     except OSError:
-        return False
+        return "error"
+
+
+def printer_available() -> bool:
+    return printer_status() == "ok"
 
 
 def _send(data: bytes) -> None:

@@ -1,0 +1,15 @@
+Sandubaria Print
+
+Este programa fica no computador da impressora e recebe os pedidos do PDV.
+Não é preciso abrir o terminal.
+
+1. Extraia esta pasta.
+2. Dê dois cliques em "sandubaria-print".
+3. Se o sistema perguntar, escolha Executar.
+   Se não abrir, clique com o botão direito no arquivo, em Propriedades,
+   e marque "Permitir execução".
+4. Na janela, clique em "Instalar neste computador" e informe a senha.
+5. Abra o PDV no navegador deste mesmo computador.
+
+O programa também inicia sozinho no próximo login.
+Fechar a janela no X apenas a minimiza. A impressão continua.
