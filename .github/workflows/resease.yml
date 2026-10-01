@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Dependências do sistema
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk python3-venv
+
+      - name: Ambiente Python
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --upgrade pip
+          .venv/bin/pip install -r requirements.txt pyinstaller
+
+      - name: Gerar executável
+        run: |
+          .venv/bin/pyinstaller --onefile --name sandubaria-print \
+            --hidden-import uvicorn.logging \
+            --hidden-import uvicorn.loops.auto \
+            --hidden-import uvicorn.protocols.http.auto \
+            --hidden-import uvicorn.protocols.websockets.auto \
+            --hidden-import uvicorn.lifespan.on \
+            run.py
+
+      - name: Montar pacote
+        run: |
+          mkdir sandubaria-print-linux
+          cp dist/sandubaria-print sandubaria-print-linux/
+          cp packaging/* sandubaria-print-linux/
+          chmod +x sandubaria-print-linux/*.sh sandubaria-print-linux/sandubaria-print
+          tar -czf sandubaria-print-linux.tar.gz sandubaria-print-linux
+
+      - name: Publicar release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: sandubaria-print-linux.tar.gz
+          generate_release_notes: true
